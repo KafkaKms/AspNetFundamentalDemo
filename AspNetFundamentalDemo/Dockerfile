@@ -10,13 +10,9 @@ WORKDIR /src
 COPY ["AspNetFundamentalDemo.csproj", "./"]
 RUN dotnet restore "AspNetFundamentalDemo.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "AspNetFundamentalDemo.csproj" -c Release -o /app/build
-
-FROM build AS publish
 RUN dotnet publish "AspNetFundamentalDemo.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "AspNetFundamentalDemo.dll"]
